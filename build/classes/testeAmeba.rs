@@ -1,0 +1,4 @@
+Queen
+State
+testeAmeba
+NQueen
