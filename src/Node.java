@@ -1,11 +1,6 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /**
  *
- * @author gaci15
+ * @author stephano
  */
 public class Node {
         protected int h;  //altura

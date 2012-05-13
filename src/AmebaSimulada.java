@@ -5,7 +5,7 @@ import java.util.*;
 /**
  *
  * @author pargles
- * @version 1.1
+ * @version 1.2
  */
 public class AmebaSimulada
 {
@@ -14,46 +14,37 @@ public class AmebaSimulada
     Table atual,proximo,melhorResultado;
     ArrayList<Node> nodosVisitados = new ArrayList<Node>();
     Node nodo,proximoNodo;
-    int n = 8,tentaram,ganharamChance;//default
+    int n,tentaram,ganharamChance;
     static Random random;
     
     /*
-     * metodo construtor que coloca um valor default para a temperaturaMaxima inicial
+     * metodo construtor que recebe a quantidade de rainhas e o vetor inicial
      */
-    public AmebaSimulada(Table vetorInicial)
+    public AmebaSimulada(int rainhas,Table vetorInicial)
     {
-        temperaturaMaxima = 50000;
-        atual = vetorInicial;
-        melhorResultado = atual;
-        random = new Random( System.currentTimeMillis());
-    }
-    /*
-     * metodo construtor que recebe a temperaturaMaxima inicial
-     */
-    public AmebaSimulada(Table vetorInicial,int temperatura)
-    {
-        this.temperaturaMaxima = temperatura;
+        n = rainhas;
         atual = vetorInicial;
         melhorResultado = atual;
         random = new Random( System.currentTimeMillis());
 
     }
 
-    /* metodo que executa a tempera simulada
+    /* metodo que executa a tempera simulada e
+     * retorna uma lista com os passos para a solucao
      * @param void
-     * @return void
+     * @return Solution execute
      */
-    public Solution execute()
+     public Solution execute()
     {
-        Solution listaSolucao = null;
-        double delta,probabilidade,randomico;boolean trocou;
-       
+       double delta,probabilidade,randomico;boolean trocou;
+       Node nodoSeguinte;
+       Node nodoAtual = new Node(0,atual, null); nodosVisitados.add(nodoAtual);
        System.out.println("conflitos: "+atual.nConf+" ");
         atual.print();
         System.out.println("");
         
-
-        for(int temperatura = temperaturaMaxima; temperatura > 0 && atual.nConf!=0 ;temperatura-=fator)
+        int temperatura;
+        for(temperatura = temperaturaMaxima; temperatura > 0 && atual.nConf!=0 ;temperatura-=fator)
         {
             proximo = new Table(atual.table); trocou=false;
             aleatoriza(proximo);//gera o proximo nodo a partir da aleatorizacao do nodo atual
@@ -84,12 +75,16 @@ public class AmebaSimulada
                 {
                     melhorResultado = atual;
                 }
+                nodoSeguinte = new Node(nodoAtual.h+1,atual, nodoAtual);
+                nodosVisitados.add(nodoSeguinte);
+                nodoAtual = nodoSeguinte;
                 
             }
             
         }
         System.out.println(ganharamChance+" de "+tentaram+" obtiveram uma chance");
         System.out.println("MELhOR RESULTADO com "+melhorResultado.nConf+" conflitos");
+        Solution listaSolucao = new Solution(nodosVisitados,nodosVisitados.size(),nodosVisitados.size());
         melhorResultado.print();
         return listaSolucao;
     }
@@ -104,6 +99,15 @@ public class AmebaSimulada
         int coluna = random.nextInt ( n -1);
         table.table[coluna]=linha;
 
+    }
+
+    /* metodo para setar a temperatura
+     * @param int temperatura
+     * @return void
+     */
+    public void setTemperatura(int temperatura)
+    {
+        temperaturaMaxima = temperatura;
     }
 
 }

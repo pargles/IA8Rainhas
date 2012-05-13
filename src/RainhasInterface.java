@@ -5,10 +5,10 @@ import javax.swing.*;
 
 /**
  * @author pargles
- * @version 1.0
+ * @version 3.2
  */
 
-public class RainhasInterface extends JFrame{
+public class RainhasInterface extends JFrame {
   enum heuristica{AStar, Encosta,Tempera;}
   private JPanel painelTabuleiro,painelConf;
   private JButton iniciar;
@@ -39,10 +39,9 @@ public class RainhasInterface extends JFrame{
    */
     public void iniciaComponentes()
     {
-        Dimension boardSize = new Dimension(300, 300);
-        painelTabuleiro = new JPanel();
+        
+        
         painelConf = new JPanel();
-        this.getContentPane().add(BorderLayout.EAST,painelTabuleiro);
         this.getContentPane().add(BorderLayout.WEST,painelConf);
         painelConf.setLayout(new GridLayout(0, 1));
         //add(painelTabuleiro);
@@ -72,14 +71,14 @@ public class RainhasInterface extends JFrame{
         painelConf.add(temperatura);
         painelConf.add(labelVazio);
         painelConf.add(iniciar);
-        painelConf.add(labelNivel); painelConf.add(nivel);
-        painelConf.add(labelEstados);painelConf.add(estados);
-        painelConf.add(labelTempo);painelConf.add(demorou);
+        painelConf.add(labelNivel);
+        painelConf.add(nivel);
+        painelConf.add(labelEstados);
+        painelConf.add(estados);
+        painelConf.add(labelTempo);
+        painelConf.add(demorou);
         //painelConf.add(labelVazio);
 
-        painelTabuleiro.setLayout(new GridLayout(8, 8));
-        painelTabuleiro.setPreferredSize(boardSize);
-        //painelTabuleiro.setBounds(0, 0, boardSize.width, boardSize.height);
         printaTabuleiro();
 }
     
@@ -92,9 +91,6 @@ public class RainhasInterface extends JFrame{
         nivel.setText(""+solucao.depth);
         estados.setText(""+solucao.open);//open e igual a way.size
         demorou.setText("" + tempo + " s");
-        painelTabuleiro = new JPanel();
-        painelTabuleiro.setLayout(new GridLayout(8, 8));
-        this.getContentPane().add(BorderLayout.EAST,painelTabuleiro);
         printaTabuleiro();//para limpar a tela
         printaRainhas(solucao.way.get(solucao.way.size()-1).table.table);
 
@@ -105,6 +101,11 @@ public class RainhasInterface extends JFrame{
      * @return void
      */
     public void printaTabuleiro() {
+        Dimension boardSize = new Dimension(300, 300);
+        painelTabuleiro = new JPanel();
+        painelTabuleiro.setLayout(new GridLayout(8, 8));
+        painelTabuleiro.setPreferredSize(boardSize);
+        this.getContentPane().add(BorderLayout.EAST,painelTabuleiro);
         for (int i = 0; i < 64; i++) {
             JPanel square = new JPanel(new BorderLayout());
             painelTabuleiro.add(square);
@@ -147,9 +148,11 @@ public class RainhasInterface extends JFrame{
                     solucao = nq.solveAStar();
                     break;
                 case Encosta:
+                    //nq.tempera.setReestarts(Integer.parseInt( reestarts.getText();)));
                     //solucao = nq.solvehillClimbing();
                     break;
                 case Tempera:
+                    nq.tempera.setTemperatura(Integer.parseInt(temperatura.getText()));
                     solucao = nq.solveSimulatedAnnealing();
                     break;
             }

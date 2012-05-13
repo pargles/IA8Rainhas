@@ -1,7 +1,7 @@
 
 /**
  *
- * @author gaci15
+ * @author stephano
  */
 import java.util.*;
 
@@ -38,7 +38,7 @@ public class AStarNQueens {
                 System.out.println("Profundidade da solucao: "+solution.depth);
                 System.out.println("Nodos visitados: "+solution.open);
                 System.out.println("Caminho da solucao: ");
-                for (int i = 0; i < way.size(); i++){
+                for (int i = 0; i < way.size(); i++){ //<<< colocar esse for dentro da classe solution
                     printTable(way.get(i).table.table);
                 }
                 return solution;
