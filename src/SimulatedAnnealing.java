@@ -36,6 +36,8 @@ public class SimulatedAnnealing
 	static double finalTemperature = 0.5;
 	static double alpha = 0.99;
 	static double stepsPerChange = 100;
+        static int tentaram=0;
+        static int conseguiram=0;
 
 	public static void main ( String[] args )
 	{
@@ -99,6 +101,12 @@ public class SimulatedAnnealing
 
 				useNew = false;
 				tweakSolution ( workingSolution );   //bounce things around a bit on the board
+                                System.out.print("vetor TROCADO: ");
+                                for(int i=0;i<maxLength;i++)
+                                {
+                                    System.out.print(workingSolution[i]);
+                                }
+                                System.out.println();
 
 				workingEnergy = computeEnergy ( workingSolution );
 
@@ -116,12 +124,18 @@ public class SimulatedAnnealing
 					double randomTest = getSmallRandom();
 					double delta = workingEnergy - currentEnergy;
 					double calculation = Math.exp( -delta/temperature );
+                                        tentaram++;
 
 					if ( calculation > randomTest ){
 
 						accepted++;
 						useNew = true;
+                                                conseguiram++;
 					}
+                                        else
+                                        {
+                                            System.out.print("");//tentou mas n conseguiu
+                                        }
 				}
 
 
@@ -296,6 +310,7 @@ public class SimulatedAnnealing
 			System.out.println();
 		}
 		System.out.println ( "\n" );
+                System.out.println("tentaram: "+tentaram+ "conseguiram: "+conseguiram);
 
 
 	}

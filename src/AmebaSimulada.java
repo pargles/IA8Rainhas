@@ -15,15 +15,17 @@ public class AmebaSimulada
     ArrayList<Node> nodosVisitados = new ArrayList<Node>();
     Node nodo,proximoNodo;
     int n = 8,tentaram,ganharamChance;//default
+    static Random random;
     
     /*
      * metodo construtor que coloca um valor default para a temperaturaMaxima inicial
      */
     public AmebaSimulada(Table vetorInicial)
     {
-        temperaturaMaxima = 10000;
+        temperaturaMaxima = 50000;
         atual = vetorInicial;
         melhorResultado = atual;
+        random = new Random( System.currentTimeMillis());
     }
     /*
      * metodo construtor que recebe a temperaturaMaxima inicial
@@ -33,6 +35,7 @@ public class AmebaSimulada
         this.temperaturaMaxima = temperatura;
         atual = vetorInicial;
         melhorResultado = atual;
+        random = new Random( System.currentTimeMillis());
 
     }
 
@@ -40,13 +43,15 @@ public class AmebaSimulada
      * @param void
      * @return void
      */
-    public void execute()
+    public Solution execute()
     {
+        Solution listaSolucao = null;
         double delta,probabilidade,randomico;boolean trocou;
-        nodo = new Node(0,melhorResultado,null);
-        nodosVisitados.add(nodo);
+       
+       System.out.println("conflitos: "+atual.nConf+" ");
         atual.print();
-        System.out.print("conflitos: "+atual.nConf+" ");
+        System.out.println("");
+        
 
         for(int temperatura = temperaturaMaxima; temperatura > 0 && atual.nConf!=0 ;temperatura-=fator)
         {
@@ -54,12 +59,12 @@ public class AmebaSimulada
             aleatoriza(proximo);//gera o proximo nodo a partir da aleatorizacao do nodo atual
             System.out.print("conflitos: "+proximo.nConf+" ");
             proximo.print();
+            System.out.println("");
             //nodo = new Node(8,);
             delta = proximo.nConf - atual.nConf;
             probabilidade = Math.exp(-delta/temperatura);
             randomico = Math.random();//gera numero entre 0.0 e 1.0
-            System.out.println("delta: "+delta+" <= prob: "+probabilidade+" => randomico: "+randomico);
-
+            
             if(delta <= 0)//o proximo nodo tem menos conflitos que o atual
             {
                 atual = proximo; trocou = true;//houve mudanca de estados
@@ -67,7 +72,7 @@ public class AmebaSimulada
             else //aki da a chance de um nodo com maior conflitos que o atual ser avaliado
             {
                 tentaram++;
-                if(randomico <= probabilidade)
+                if(randomico < probabilidade)
                 {
                     atual = proximo;trocou=true;
                     ganharamChance++;
@@ -79,14 +84,14 @@ public class AmebaSimulada
                 {
                     melhorResultado = atual;
                 }
-                proximoNodo = new Node(nodo.h+1,atual,nodo);//cria nodo apenas se alguma posicao foi midificada
-                nodosVisitados.add(proximoNodo);
+                
             }
             
         }
-        System.out.println(ganharamChance+"de "+tentaram+"obtiveram uma chance");
+        System.out.println(ganharamChance+" de "+tentaram+" obtiveram uma chance");
         System.out.println("MELhOR RESULTADO com "+melhorResultado.nConf+" conflitos");
         melhorResultado.print();
+        return listaSolucao;
     }
 
     /*metodo utilizado pela tempera simulada, sorteia uma coluna e altera algum valor dessa coluna
@@ -95,11 +100,9 @@ public class AmebaSimulada
      */
     public void aleatoriza(Table table)
     {
-        Random random = new Random( System.currentTimeMillis());
-        int coluna = random.nextInt ( n -1); // gera um numero aleatorio de 0 ate tamTabuleiro (tamTabuleiro e o tamanho do tabuleiro
-        int linha = random.nextInt ( n -1);
-        table.table[coluna]= linha;
-         table.conflicts();//calcula o numero de conflitos para o novo tabuleiro
+        int linha = random.nextInt ( n -1); // gera um numero aleatorio de 0 ate tamTabuleiro (tamTabuleiro e o tamanho do tabuleiro
+        int coluna = random.nextInt ( n -1);
+        table.table[coluna]=linha;
 
     }
 
