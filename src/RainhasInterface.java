@@ -1,6 +1,10 @@
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Observable;
+import java.util.Observer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.*;
 
 /**
@@ -8,7 +12,7 @@ import javax.swing.*;
  * @version 3.2
  */
 
-public class RainhasInterface extends JFrame {
+public class RainhasInterface extends JFrame implements Observer{
   enum heuristica{AStar, Encosta,Tempera;}
   private JPanel painelTabuleiro,painelConf;
   private JButton iniciar;
@@ -21,6 +25,7 @@ public class RainhasInterface extends JFrame {
   private NQueens nq;
   private Solution solucao;//recebe a lista de nodos abertos e profundidade etc
   public long tempo;//armazena tempo que demorou para calcular em segundos
+  private Thread processo;
 
   /*
    * metodo construtor da classe
@@ -91,7 +96,7 @@ public class RainhasInterface extends JFrame {
         nivel.setText(""+solucao.depth);
         estados.setText(""+solucao.open);//open e igual a way.size
         demorou.setText("" + tempo + " s");
-        printaTabuleiro();//para limpar a tela
+        //printaTabuleiro();//para limpar a tela
         printaRainhas(solucao.way.get(solucao.way.size()-1).table.table);
 
     }
@@ -101,6 +106,7 @@ public class RainhasInterface extends JFrame {
      * @return void
      */
     public void printaTabuleiro() {
+        
         Dimension boardSize = new Dimension(300, 300);
         painelTabuleiro = new JPanel();
         painelTabuleiro.setLayout(new GridLayout(8, 8));
@@ -124,6 +130,9 @@ public class RainhasInterface extends JFrame {
    */
   public void printaRainhas(int[] solucao)
   {
+      painelTabuleiro.removeAll();
+      remove(painelTabuleiro);
+       printaTabuleiro();//para limpar a tela
       int posicaoRainha;
       for(int i=0; i<solucao.length;i++)
       {
@@ -132,6 +141,9 @@ public class RainhasInterface extends JFrame {
           JPanel panel = (JPanel) painelTabuleiro.getComponent(posicaoRainha);
           panel.add(peca);
       }
+      add(painelTabuleiro);
+      validate();
+      repaint();
   }
 
     /* evento que cuida o botao iniciar
@@ -157,7 +169,12 @@ public class RainhasInterface extends JFrame {
                     break;
             }
             tempo = (System.currentTimeMillis() - tempoInicio) / 1000;
-            imprimeResultados();
+            nivel.setText("" + solucao.depth);
+            estados.setText("" + solucao.open);//open e igual a way.size
+            demorou.setText("" + tempo + " s");
+            executaProcesso();
+            processo = null;//pronto para outro processo
+            //imprimeResultados();
             iniciar.setEnabled(true);
 
         }
@@ -182,6 +199,64 @@ public class RainhasInterface extends JFrame {
             {
                 temperatura.setEnabled(true);
             }
+        }
+    }
+
+    /**
+     * Atualiza a tela
+     * @see java.util.Observerupdate(java.util.Observable, java.lang.Object)
+     * @param o Objeto que sofreu uma atualização
+     * @param arg Argumento passado pelo objeto para seus observadores
+     */
+    public void update(Observable o, Object arg) {
+        //se nao for um boolean, ou seja se nao terminou o processo
+        if (!(arg instanceof Boolean)) {
+            int[] temp = (int[]) arg;
+            printaRainhas(temp);
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(RainhasInterface.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+
+    private void executaProcesso() {
+        if (processo == null)
+        { //Instancia a thread SE não existir uma
+            processo = new Thread(new printSolution(this));
+            processo.start();
+        } 
+        else
+        {
+            System.out.println("O processo ainda está em execução");
+        }
+    }
+
+    public class printSolution extends Observable implements Runnable {
+
+        public printSolution(Observer observador) {
+            addObserver(observador);
+        }
+
+        public void run() {
+            //if (oito.way.size() > 0){
+            int i = 0;
+            int[] sol = solucao.way.get(solucao.way.size()-1).table.table;
+            int[] temp = nq.table.table;//recebe o vetor incial
+            //cada posicao dele, a cada passagem do laco, sera subsituida pela posicao final
+
+            for (i=0; i < temp.length; i++) {
+                temp[i] = sol[i];//cada volta do laco uma posicao do incial e trocada pelo final
+                notifyObservers(temp);
+                setChanged();
+                //Notifica o processamento a cada 1 iteração
+            }
+            //Notifica fim do processo
+            notifyObservers(new Boolean(true));
+            setChanged();
+            //}
+
         }
     }
 }
