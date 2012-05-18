@@ -68,5 +68,7 @@ public class Table {
         for (int i = 0; i < table.length; i++){
             System.out.print(table[i]+",");
         }
+        System.out.print("]\n");
+
     }
 }

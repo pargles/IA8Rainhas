@@ -16,7 +16,7 @@ public class RainhasInterface extends JFrame implements Observer{
   enum heuristica{AStar, Encosta,Tempera;}
   private JPanel painelTabuleiro,painelConf;
   private JButton iniciar;
-  private JLabel labelEncosta,labelTempera,labelNivel,nivel,labelEstados,estados,labelTempo,demorou,labelVazio;
+  private JLabel labelEncosta,labelTempera,labelNivel,nivel,labelEstados,estados,labelTempo,demorou,labelVazio,labelConflitos;
   private JComboBox listaAlgoritmos = new JComboBox();//para colocar os algoritmos
   private String tipoBusca ="AStar";//default
   private String diretorio = System.getProperty("user.dir");
@@ -61,7 +61,8 @@ public class RainhasInterface extends JFrame implements Observer{
         labelEncosta = new JLabel("reestarts: ");
         labelNivel= new JLabel("nivel: ");nivel= new JLabel("");
         labelEstados= new JLabel("estados: ");estados= new JLabel("");
-        labelTempo = new JLabel("tempo: ");demorou =new JLabel("");
+        labelTempo = new JLabel("tempo: ");
+        labelConflitos = new JLabel("coflitos: ");//demorou =new JLabel("");
         labelVazio = new JLabel("\n");
 
         temperatura = new JTextField();
@@ -80,8 +81,9 @@ public class RainhasInterface extends JFrame implements Observer{
         painelConf.add(nivel);
         painelConf.add(labelEstados);
         painelConf.add(estados);
+        painelConf.add(labelConflitos);
         painelConf.add(labelTempo);
-        painelConf.add(demorou);
+        //painelConf.add(demorou);
         //painelConf.add(labelVazio);
 
         printaTabuleiro();
@@ -171,7 +173,9 @@ public class RainhasInterface extends JFrame implements Observer{
             tempo = (System.currentTimeMillis() - tempoInicio) / 1000;
             nivel.setText("" + solucao.depth);
             estados.setText("" + solucao.open);//open e igual a way.size
-            demorou.setText("" + tempo + " s");
+            labelConflitos.setText("conflitos: "+solucao.way.get(solucao.way.size()-1).table.nConf);
+            labelTempo.setText("tempo: " + tempo+ " s");
+            
             executaProcesso();
             processo = null;//pronto para outro processo
             //imprimeResultados();
