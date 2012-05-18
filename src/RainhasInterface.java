@@ -9,14 +9,14 @@ import javax.swing.*;
 
 /**
  * @author pargles
- * @version 3.2
+ * @version 5.3
  */
 
 public class RainhasInterface extends JFrame implements Observer{
   enum heuristica{AStar, Encosta,Tempera;}
   private JPanel painelTabuleiro,painelConf;
-  private JButton iniciar;
-  private JLabel labelEncosta,labelTempera,labelNivel,nivel,labelEstados,estados,labelTempo,demorou,labelVazio,labelConflitos;
+  private JButton iniciar,mostrarSolucao;
+  private JLabel labelEncosta,labelTempera,labelNivel,labelEstados,estados,labelTempo,demorou,labelVazio,labelConflitos;
   private JComboBox listaAlgoritmos = new JComboBox();//para colocar os algoritmos
   private String tipoBusca ="AStar";//default
   private String diretorio = System.getProperty("user.dir");
@@ -54,12 +54,17 @@ public class RainhasInterface extends JFrame implements Observer{
         iniciar = new JButton("Iniciar");
         iniciar.addActionListener(new botaoIniciar());
 
+        mostrarSolucao = new JButton("Solucao");
+        mostrarSolucao.addActionListener(new botaoSolucao());
+        mostrarSolucao.setFocusable(false);
+        mostrarSolucao.setEnabled(false);
+
         listaAlgoritmos.setModel(new javax.swing.DefaultComboBoxModel(new String[]{"AStar", "Encosta", "Tempera"}));
         listaAlgoritmos.addActionListener(new selecionaAlgoritmo());
 
         labelTempera = new JLabel("temperatura:");
         labelEncosta = new JLabel("reestarts: ");
-        labelNivel= new JLabel("nivel: ");nivel= new JLabel("");
+        labelNivel= new JLabel("nivel: ");
         labelEstados= new JLabel("estados: ");estados= new JLabel("");
         labelTempo = new JLabel("tempo: ");
         labelConflitos = new JLabel("coflitos: ");//demorou =new JLabel("");
@@ -75,10 +80,10 @@ public class RainhasInterface extends JFrame implements Observer{
         painelConf.add(reestarts);
         painelConf.add(labelTempera);
         painelConf.add(temperatura);
-        painelConf.add(labelVazio);
+        //painelConf.add(labelVazio);
         painelConf.add(iniciar);
+        painelConf.add(mostrarSolucao);
         painelConf.add(labelNivel);
-        painelConf.add(nivel);
         painelConf.add(labelEstados);
         painelConf.add(estados);
         painelConf.add(labelConflitos);
@@ -95,11 +100,10 @@ public class RainhasInterface extends JFrame implements Observer{
      * @return void
      */
     public void imprimeResultados() {
-        nivel.setText(""+solucao.depth);
-        estados.setText(""+solucao.open);//open e igual a way.size
-        demorou.setText("" + tempo + " s");
-        //printaTabuleiro();//para limpar a tela
-        printaRainhas(solucao.way.get(solucao.way.size()-1).table.table);
+        estados.setText("" + solucao.open);//open e igual a way.size
+        labelConflitos.setText("conflitos: " + solucao.way.get(solucao.way.size() - 1).table.nConf);
+        labelTempo.setText("tempo: " + tempo + " s");
+        labelNivel.setText("nivel: " + solucao.depth);
 
     }
 
@@ -155,7 +159,7 @@ public class RainhasInterface extends JFrame implements Observer{
     public class botaoIniciar implements ActionListener {
 
         public void actionPerformed(ActionEvent e) {
-            iniciar.setEnabled(false);
+              iniciar.setEnabled(false);
             long tempoInicio = System.currentTimeMillis();
             switch (heuristica.valueOf(tipoBusca)) {
                 case AStar:
@@ -170,17 +174,24 @@ public class RainhasInterface extends JFrame implements Observer{
                     solucao = nq.solveSimulatedAnnealing();
                     break;
             }
-            tempo = (System.currentTimeMillis() - tempoInicio) / 1000;
-            nivel.setText("" + solucao.depth);
-            estados.setText("" + solucao.open);//open e igual a way.size
-            labelConflitos.setText("conflitos: "+solucao.way.get(solucao.way.size()-1).table.nConf);
-            labelTempo.setText("tempo: " + tempo+ " s");
-            
+            tempo = (System.currentTimeMillis() - tempoInicio) / 1000;         
+            imprimeResultados();
+            iniciar.setEnabled(true);
+            mostrarSolucao.setEnabled(true);
+
+        }
+    }
+
+     /* evento que cuida o botao que vai mostrar a solucao
+     * @param void
+     * @return void
+     */
+    public class botaoSolucao implements ActionListener {
+
+        public void actionPerformed(ActionEvent e) {
             executaProcesso();
             processo = null;//pronto para outro processo
-            //imprimeResultados();
-            iniciar.setEnabled(true);
-
+            mostrarSolucao.setEnabled(false);
         }
     }
 

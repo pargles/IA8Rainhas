@@ -100,18 +100,6 @@ public class SimulatedAnnealing
         return caminhoSolucao();
     }
 
-    /*metodo utilizado pela tempera simulada, sorteia uma coluna e altera algum valor dessa coluna
-    * @param Table t
-     * @return void
-     */
-    public void aleatoriza(Table table)
-    {
-        int linha = random.nextInt ( n -1); // gera um numero aleatorio de 0 ate tamTabuleiro (tamTabuleiro e o tamanho do tabuleiro
-        int coluna = random.nextInt ( n -1);
-        table.table[coluna]=linha;
-
-    }
-
     /* metodo para setar a temperatura
      * @param int temperatura
      * @return void
@@ -148,6 +136,11 @@ public class SimulatedAnnealing
 
     }
 
+    /* metodo que gera o caminho da classe Solution e retorna esse caminho
+     * esse metodo tambem printa o caminho e outras informacoes
+     * @param void
+     * @return Solution caminhoSolucao
+     */
     public Solution caminhoSolucao()
     {                              //lista de nodos , depht (h)      , abertos (open)
         Solution listaSolucao = new Solution(caminho,caminho.size(),nodosVisitados.size()-1);
