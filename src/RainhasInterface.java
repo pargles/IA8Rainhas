@@ -67,13 +67,13 @@ public class RainhasInterface extends JFrame implements Observer{
         labelNivel= new JLabel("nivel: ");
         labelEstados= new JLabel("estados: ");estados= new JLabel("");
         labelTempo = new JLabel("tempo: ");
-        labelConflitos = new JLabel("coflitos: ");//demorou =new JLabel("");
+        labelConflitos = new JLabel("coflitos: "+nq.table.nConf);//demorou =new JLabel("");
         labelVazio = new JLabel("\n");
 
         temperatura = new JTextField();
-        temperatura.setText("10000");temperatura.setEnabled(false); 
+        temperatura.setText("30000");temperatura.setEnabled(false);
         reestarts = new JTextField();
-        reestarts.setText("50"); reestarts.setEnabled(false);
+        reestarts.setText("170"); reestarts.setEnabled(false);
 
         painelConf.add(listaAlgoritmos);
         painelConf.add(labelEncosta);
@@ -166,8 +166,8 @@ public class RainhasInterface extends JFrame implements Observer{
                     solucao = nq.solveAStar();
                     break;
                 case Encosta:
-                    //nq.tempera.setReestarts(Integer.parseInt( reestarts.getText();)));
-                    //solucao = nq.solvehillClimbing();
+                    nq.encosta.setReestarts(Integer.parseInt( reestarts.getText()));
+                    solucao = nq.solveHillClimbing();
                     break;
                 case Tempera:
                     nq.tempera.setTemperatura(Integer.parseInt(temperatura.getText()));

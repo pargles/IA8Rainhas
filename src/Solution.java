@@ -16,4 +16,12 @@ public class Solution {
         depth = h;
         open = o;
     }
+
+    void showWay() {
+        for (int i = 0; i < way.size(); i++)
+        {
+            System.out.print("conflitos: " + way.get(i).table.nConf + " ");
+            way.get(i).table.print();
+        }
+    }
 }

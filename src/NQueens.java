@@ -11,14 +11,14 @@ public class NQueens {
     int n;  //tamanho do tabuleiro
     protected AStarNQueens aStar;
     protected SimulatedAnnealing tempera;
-    //protected HillClimbing hillClimbing;
+    protected HillClimbing encosta;
 
     public NQueens(){
         n = 8;
         table = new Table();
         aStar = new AStarNQueens(n, table);
         tempera = new SimulatedAnnealing(n,table);
-        //hillClimbing = new HillClimbing(n, table);
+        encosta = new HillClimbing(n, table);
     }
 
     public NQueens(int[] table){
@@ -26,7 +26,7 @@ public class NQueens {
         this.table = new Table(table);
         aStar = new AStarNQueens(n, this.table);
         tempera = new SimulatedAnnealing(n,this.table);
-        //hillClimbing = new HillClimbing(n, this.table);
+        encosta = new HillClimbing(n, this.table);
     }
 
     public Solution solveAStar(){
@@ -36,9 +36,9 @@ public class NQueens {
     public Solution solveSimulatedAnnealing(){
         return tempera.execute();
     }
-/*
-    public Solution hillClimbing(){
-        return hillClimbing.execute();
-    }*/
+
+    public Solution solveHillClimbing(){
+        return encosta.execute();
+    }
     
 }

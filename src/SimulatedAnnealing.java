@@ -55,10 +55,6 @@ public class SimulatedAnnealing
             proximo = new Table(vizinhoAleatorio().table.clone());
             vizinhos.clear();
             trocou=false;
-            //aleatoriza(proximo);//gera o proximo nodo a partir da aleatorizacao do nodo atual
-            //System.out.print("conflitos: "+proximo.nConf+" ");
-            //proximo.print();
-
             delta = proximo.nConf - atual.nConf;
             probabilidade = Math.exp(-delta/temperatura)-0.5;
             randomico = Math.random();//gera numero entre 0.0 e 1.0
@@ -78,22 +74,20 @@ public class SimulatedAnnealing
                     ganharamChance++;
                 }
             }
-            if (trocou)//se houve alguma modificacao no nodo tual
+            if (trocou)//se houve alguma modificacao no nodo atual
             {
-                if (melhorResultado.nConf > atual.nConf)
-                {
-                    melhorResultado = atual;
-                                        //altura,     tabela,  Nodopai
-                    Node nodoAux= new Node(nodoAtual.h + 1, atual, nodoAtual);
-                    caminho.add(nodoAux);
 
+                if (melhorResultado.nConf > atual.nConf) {
+                    melhorResultado = atual;
+                    //altura,     tabela,  Nodopai
+                    Node nodoAux = new Node(nodoAtual.h + 1, atual, nodoAtual);
+                    caminho.add(nodoAux);
                 }
             }
-                        //altura,     tabela,  Nodopai
+            //altura,     tabela,  Nodopai
             proximoNodo = new Node(nodoAtual.h + 1, atual, nodoAtual);
             nodosVisitados.add(proximoNodo);
             nodoAtual = proximoNodo;
-            
         }
         System.out.println(ganharamChance+" de "+tentaram+" obtiveram uma chance");
         //melhorResultado.print();
@@ -147,12 +141,7 @@ public class SimulatedAnnealing
         System.out.println("Profundidade da solucao: " + listaSolucao.depth);
         System.out.println("Nodos visitados: " + listaSolucao.open);
         System.out.println("Caminho da solucao: ");
-        for (int i = 0; i < caminho.size(); i++)//<<< colocar esse for dentro da classe solution
-        {
-            System.out.print("conflitos: "+caminho.get(i).table.nConf+" ");
-            caminho.get(i).table.print();
-        }
-
+        listaSolucao.showWay();
         return listaSolucao;
     }
 
