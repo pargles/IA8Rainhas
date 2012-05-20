@@ -26,6 +26,7 @@ public class RainhasInterface extends JFrame implements Observer{
   private Solution solucao;//recebe a lista de nodos abertos e profundidade etc
   public long tempo;//armazena tempo que demorou para calcular em segundos
   private Thread processo;
+  private int TEMPO = 1000;//tempo para mudar pecas de posicao, 1000 = 1s
 
   /*
    * metodo construtor da classe
@@ -159,7 +160,7 @@ public class RainhasInterface extends JFrame implements Observer{
     public class botaoIniciar implements ActionListener {
 
         public void actionPerformed(ActionEvent e) {
-              iniciar.setEnabled(false);
+            iniciar.setEnabled(false);
             long tempoInicio = System.currentTimeMillis();
             switch (heuristica.valueOf(tipoBusca)) {
                 case AStar:
@@ -203,6 +204,7 @@ public class RainhasInterface extends JFrame implements Observer{
     public class selecionaAlgoritmo implements ActionListener {
 
         public void actionPerformed(ActionEvent ae) {
+            
             tipoBusca = (String) listaAlgoritmos.getSelectedItem();
             temperatura.setEnabled(false); //desativa a caixa de testo da temperatura
             reestarts.setEnabled(false);//desativa a caixa de texto dos reestarts
@@ -229,7 +231,7 @@ public class RainhasInterface extends JFrame implements Observer{
             int[] temp = (int[]) arg;
             printaRainhas(temp);
             try {
-                Thread.sleep(1000);
+                Thread.sleep(TEMPO);
             } catch (InterruptedException ex) {
                 Logger.getLogger(RainhasInterface.class.getName()).log(Level.SEVERE, null, ex);
             }

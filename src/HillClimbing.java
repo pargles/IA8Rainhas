@@ -18,14 +18,16 @@ public class HillClimbing {
     static Random random;
     int n;
 
+    //metodo sobrescrito para dizer oque comparar para inserir um nodo
     Comparator<Node> comparator = new Comparator<Node>()
     {    public int compare(Node n, Node n1) {
-            if(n1 == null){ return -1;} // t e maior
-            return n.table.nConf<=n1.table.nConf ? -1:1; // 1 e utilizado quando t e maior que t1
+            if(n1 == null){ return -1;} // n e menor
+            return n.table.nConf<=n1.table.nConf ? -1:1; // -1 coloca o menor valor no inicio da lista de prioridade
+            //compara o numero de conflitos
         }
     };
 
-    PriorityQueue<Node> vizinhos;
+    PriorityQueue<Node> vizinhos;//filfa de prioridade de nodos
 
 
 

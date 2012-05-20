@@ -2,7 +2,7 @@
 import javax.swing.JFrame;
 
 /**
- *
+ * https://github.com/pargles/IA8Rainhas
  * @authors Stephano and pargles
  */
 public class Main {
