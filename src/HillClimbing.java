@@ -6,7 +6,7 @@ import java.util.Random;
 
 /**
  *
- * @author pargles
+ * @author Cássio R. C.
  */
 
 public class HillClimbing {
