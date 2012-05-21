@@ -15,8 +15,8 @@ import javax.swing.*;
 public class RainhasInterface extends JFrame implements Observer{
   enum heuristica{AStar, Encosta,Tempera;}
   private JPanel painelTabuleiro,painelConf;
-  private JButton iniciar,mostrarSolucao;
-  private JLabel labelEncosta,labelTempera,labelNivel,labelEstados,estados,labelTempo,demorou,labelVazio,labelConflitos;
+  private JButton iniciar,mostrarSolucao,novoJogo;
+  private JLabel labelEncosta,labelTempera,labelNivel,labelEstados,estados,labelTempo,labelConflitos;
   private JComboBox listaAlgoritmos = new JComboBox();//para colocar os algoritmos
   private String tipoBusca ="AStar";//default
   private String diretorio = System.getProperty("user.dir");
@@ -27,7 +27,7 @@ public class RainhasInterface extends JFrame implements Observer{
   public long tempo;//armazena tempo que demorou para calcular em segundos
   private Thread processo;
   private int TEMPO = 1000;//tempo para mudar pecas de posicao, 1000 = 1s
-
+  
   /*
    * metodo construtor da classe
    */
@@ -36,6 +36,7 @@ public class RainhasInterface extends JFrame implements Observer{
       nq = new NQueens();
       iniciaComponentes();
       printaRainhas(nq.table.table);//tabuleiro inicial, sorteado
+
   }
 
   /* metodo que inicia todos objetos
@@ -60,17 +61,21 @@ public class RainhasInterface extends JFrame implements Observer{
         mostrarSolucao.setFocusable(false);
         mostrarSolucao.setEnabled(false);
 
+        novoJogo = new JButton("Sorteia");
+        novoJogo.addActionListener(new botaoNovoJogo());
+        novoJogo.setFocusable(false);
+
         listaAlgoritmos.setModel(new javax.swing.DefaultComboBoxModel(new String[]{"AStar", "Encosta", "Tempera"}));
         listaAlgoritmos.addActionListener(new selecionaAlgoritmo());
 
         labelTempera = new JLabel("temperatura:");
         labelEncosta = new JLabel("reestarts: ");
         labelNivel= new JLabel("nivel: ");
-        labelEstados= new JLabel("estados: ");estados= new JLabel("");
+        labelEstados= new JLabel("estados: ");
+        estados= new JLabel("");
         labelTempo = new JLabel("tempo: ");
         labelConflitos = new JLabel("coflitos: "+nq.table.nConf);//demorou =new JLabel("");
-        labelVazio = new JLabel("\n");
-
+        
         temperatura = new JTextField();
         temperatura.setText("30000");temperatura.setEnabled(false);
         reestarts = new JTextField();
@@ -81,16 +86,15 @@ public class RainhasInterface extends JFrame implements Observer{
         painelConf.add(reestarts);
         painelConf.add(labelTempera);
         painelConf.add(temperatura);
-        //painelConf.add(labelVazio);
         painelConf.add(iniciar);
         painelConf.add(mostrarSolucao);
+        painelConf.add(novoJogo);
         painelConf.add(labelNivel);
         painelConf.add(labelEstados);
         painelConf.add(estados);
         painelConf.add(labelConflitos);
         painelConf.add(labelTempo);
-        //painelConf.add(demorou);
-        //painelConf.add(labelVazio);
+
 
         printaTabuleiro();
 }
@@ -105,6 +109,7 @@ public class RainhasInterface extends JFrame implements Observer{
         labelConflitos.setText("conflitos: " + solucao.way.get(solucao.way.size() - 1).table.nConf);
         labelTempo.setText("tempo: " + tempo + " s");
         labelNivel.setText("nivel: " + solucao.depth);
+        
 
     }
 
@@ -196,6 +201,8 @@ public class RainhasInterface extends JFrame implements Observer{
         }
     }
 
+
+
      /* evento que cuida da caixa para selecionar o nome
       * do algoritmo a ser executado
      * @param void
@@ -219,6 +226,19 @@ public class RainhasInterface extends JFrame implements Observer{
         }
     }
 
+     /* evento que cuida o botao que vai criar um novo tabuleiro aleatorio
+     * @param void
+     * @return void
+     */
+    public class botaoNovoJogo implements ActionListener {
+
+        public void actionPerformed(ActionEvent e) {
+            nq.table = new Table();
+            printaRainhas(nq.table.table);//tabuleiro inicial, sorteado
+        }
+    }
+
+    
     /**
      * Atualiza a tela
      * @see java.util.Observerupdate(java.util.Observable, java.lang.Object)
